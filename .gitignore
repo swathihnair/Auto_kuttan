@@ -1,0 +1,24 @@
+# Sensitive files - DO NOT COMMIT
+**/credentials.json
+**/token.json
+**/.env
+
+# Python
+__pycache__/
+*.py[oc]
+*.egg-info
+.venv/
+venv/
+
+# Node
+node_modules/
+.astro/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
