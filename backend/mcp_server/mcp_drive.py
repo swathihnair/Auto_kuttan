@@ -153,38 +153,6 @@ def send_email_google(filename: str, receiver_email: str) -> str:
     except Exception as e:
         return f"Error sending email: {e}"
 
-@mcp.tool()
-def send_simple_email(receiver_email: str, subject: str, body: str) -> str:
-    """
-    Send a simple email without attachments
-    Args:
-        receiver_email: Email address of the receiver
-        subject: Subject of the email
-        body: Body content of the email
-    """
-    try:
-        creds = get_credentials()
-        service = build("gmail", "v1", credentials=creds)
-
-        msg = MIMEMultipart()
-        msg["To"] = receiver_email
-        msg["From"] = "me"
-        msg["Subject"] = subject
-
-        msg.attach(MIMEText(body, "plain"))
-
-        raw_message = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-
-        service.users().messages().send(
-            userId="me",
-            body={"raw": raw_message}
-        ).execute()
-
-        return f"Email sent successfully to {receiver_email} ✅"
-
-    except Exception as e:
-        return f"Error sending email: {e}"
-
     
 if __name__ == "__main__":
     mcp.run(transport="stdio")
