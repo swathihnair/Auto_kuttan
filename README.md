@@ -2,27 +2,32 @@
   <img src="./img.png" alt="Project Banner" width="100%">
 </p>
 
-# [Project Name] 🎯
+# Auto Kuttan 🎯
 
 ## Basic Details
 
-### Team Name: [Name]
+### Team Name: Swathi H Nair
 
 ### Team Members
-- Member 1: [Name] - [College]
-- Member 2: [Name] - [College]
+- Member 1: Swathi H Nair - TocH Institution of Science and Technology
+  
 
 ### Hosted Project Link
-[mention your project hosted link here]
+https://auto-kuttan.vercel.app/
 
 ### Project Description
-[2-3 lines about what your project does]
+Google Drive and Gmail APIs are used by Auto Kuttan, an AI-powered assistant, to automate tasks.
+Through a clever chat-based interface, users can send emails, download files, and process data with ease.
 
 ### The Problem statement
-[What problem are you solving?]
+It takes a lot of time and repetition to handle chores like sending emails, downloading files from Google Drive, and manually processing data.
+Users frequently switch between platforms, which lowers productivity and raises the possibility of mistakes.
+A centralized, intelligent system that can effectively automate these tasks is required.
 
 ### The Solution
-[How are you solving it?]
+Using a straightforward chat-based interface, Auto Kuttan is an AI-powered automation assistant that works with Google Drive and Gmail to complete tasks.
+From a single dashboard, users can easily process CSV data, send emails, and download files.
+The system increases user productivity, efficiency, and saves time by automating repetitive workflows.
 
 ---
 
@@ -31,25 +36,21 @@
 ### Technologies/Components Used
 
 **For Software:**
-- Languages used: [e.g., JavaScript, Python, Java]
-- Frameworks used: [e.g., React, Django, Spring Boot]
-- Libraries used: [e.g., axios, pandas, JUnit]
-- Tools used: [e.g., VS Code, Git, Docker]
+- Languages used:  JavaScript, Python
+- Frameworks used: React,Astro,FastApi
+- Libraries used: fastmcp,google-api-python-client,google-auth-oauthlib,google-auth-httplib2,groq,uvicorn,python-multipart
+- Tools used:  VS Code, Git, vercel,Render
 
-**For Hardware:**
-- Main components: [List main components]
-- Specifications: [Technical specifications]
-- Tools required: [List tools needed]
 
 ---
 
 ## Features
 
 List the key features of your project:
-- Feature 1: [Description]
-- Feature 2: [Description]
-- Feature 3: [Description]
-- Feature 4: [Description]
+- Feature 1: Automated Email Sending
+- Feature 2: Smart file organisation
+- Feature 3:  Interactive Cosmic UI
+
 
 ---
 
@@ -58,23 +59,26 @@ List the key features of your project:
 ### For Software:
 
 #### Installation
+###Frontend
 ```bash
-[Installation commands - e.g., npm install, pip install -r requirements.txt]
+npm install
+```
+###Backend
+```bash
+uv pip install -r requirements.txt
+
 ```
 
 #### Run
+###Frontend
 ```bash
-[Run commands - e.g., npm start, python app.py]
+npm run dev
 ```
-
-### For Hardware:
-
-#### Components Required
-[List all components needed with specifications]
-
-#### Circuit Setup
-[Explain how to set up the circuit]
-
+###Backend
+```bash
+cd backend
+uv run server.py
+```
 ---
 
 ## Project Documentation
@@ -83,7 +87,7 @@ List the key features of your project:
 
 #### Screenshots (Add at least 3)
 
-![Screenshot1](Add screenshot 1 here with proper name)
+
 *Add caption explaining what this shows*
 
 ![Screenshot2](Add screenshot 2 here with proper name)
