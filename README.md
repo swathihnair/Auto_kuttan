@@ -87,14 +87,14 @@ uv run server.py
 
 #### Screenshots (Add at least 3)
 
+https://github.com/swathihnair/Auto_kuttan/blob/main/sign%20in.png
+this is the sign page for my website
 
-*Add caption explaining what this shows*
+https://github.com/swathihnair/Auto_kuttan/blob/main/chat%20area.png
+chat area of my website.here we will give the instruction to ai
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+https://github.com/swathihnair/Auto_kuttan/blob/main/download.png
+this is one feature of auto kuttan that is download
 
 #### Diagrams
 
@@ -110,28 +110,7 @@ uv run server.py
 
 ---
 
-### For Hardware:
 
-#### Schematic & Circuit
-
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
-
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
-
-#### Build Photos
-
-![Team](Add photo of your team here)
-
-![Components](Add photo of your components here)
-*List out all components shown*
-
-![Build](Add photos of build process here)
-*Explain the build steps*
-
-![Final](Add photo of final product here)
-*Explain the final build*
 
 ---
 
@@ -365,8 +344,7 @@ python script.py -v --format json data.json
 ## Project Demo
 
 ### Video
-[Add your demo video link here - YouTube, Google Drive, etc.]
-
+https://drive.google.com/file/d/1Z3re8r8gSGp9CvtImRKnowtbqy7jzFy3/view?usp=sharing
 *Explain what the video demonstrates - key features, user flow, technical highlights*
 
 ### Additional Demos
@@ -378,7 +356,7 @@ python script.py -v --format json data.json
 
 If you used AI tools during development, document them here for transparency:
 
-**Tool Used:** [e.g., GitHub Copilot, v0.dev, Cursor, ChatGPT, Claude]
+**Tool Used:**  GitHub Copilot,  ChatGPT
 
 **Purpose:** [What you used it for]
 - Example: "Generated boilerplate React components"
@@ -402,11 +380,6 @@ If you used AI tools during development, document them here for transparency:
 
 ---
 
-## Team Contributions
-
-- [Name 1]: [Specific contributions - e.g., Frontend development, API integration, etc.]
-- [Name 2]: [Specific contributions - e.g., Backend development, Database design, etc.]
-- [Name 3]: [Specific contributions - e.g., UI/UX design, Testing, Documentation, etc.]
 
 ---
 
