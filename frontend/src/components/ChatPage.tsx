@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import CheckeredBackground from './CheckeredBackground';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'https://auto-kuttan-backend.onrender.com';
 
 interface Message {
   text: string;
