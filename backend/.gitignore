@@ -11,3 +11,7 @@ wheels/
 .env
 mcp_server_helper/credentials.json
 mcp_server_helper/token.json
+
+# Upload/Download directories
+user_upload/
+download/
