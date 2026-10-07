@@ -48,10 +48,15 @@ def folder_selector_ai(
 ) -> FolderSelecter:
     pdf_text = extract_pdf_text(pdf_path)
 
+    # Get API key from environment
+    groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ_API")
+    if not groq_api_key:
+        raise ValueError("GROQ_API_KEY not set. Please set the GROQ_API_KEY environment variable.")
+
     agent = Agent(
         model=Groq(
             id="openai/gpt-oss-120b",
-            api_key=os.getenv("GROQ_API"),
+            api_key=groq_api_key,
         ),
         markdown=False,
         output_schema=FolderSelecter,   
@@ -80,18 +85,46 @@ def folder_selector_ai(
                 """
 
     result = agent.run(prompt)
-    return result.content
+    
+    # Check if result.content is a FolderSelecter object or needs to be parsed
+    if isinstance(result.content, FolderSelecter):
+        return result.content
+    elif isinstance(result.content, dict):
+        return FolderSelecter(**result.content)
+    else:
+        # If AI didn't return proper format, use first folder as fallback
+        print(f"Warning: AI returned unexpected format: {result.content}")
+        if folders and len(folders) > 0:
+            return FolderSelecter(folder_name=folders[0]['name'], folder_id=folders[0]['id'])
+        raise ValueError("No folders available and AI response invalid")
 
 def get_credentials(credentials_path: str = DEFAULT_CREDENTIALS_PATH,
                    token_path: str = DEFAULT_TOKEN_PATH) -> Credentials:
     creds = None
-    if os.path.exists(token_path):
+    
+    # First, try to get token from environment variable (for production)
+    token_json_env = os.getenv("GOOGLE_TOKEN_JSON")
+    if token_json_env:
+        print("Using token from environment variable")
+        try:
+            token_data = json.loads(token_json_env)
+            creds = Credentials.from_authorized_user_info(token_data, SCOPES)
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse token from environment: {e}")
+    
+    # If not in environment, try local file
+    if not creds and os.path.exists(token_path):
         with open(token_path, "r") as token_file:
             token_data = json.load(token_file)
-            creds = Credentials.from_authorized_user_info(token_data)
+            creds = Credentials.from_authorized_user_info(token_data, SCOPES)
+    
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
+            # Save refreshed token
+            token_json = json.loads(creds.to_json())
+            with open(token_path, "w") as token_file:
+                json.dump(token_json, token_file)
         else:
             if not os.path.exists(credentials_path):
                 raise FileNotFoundError(
@@ -101,9 +134,9 @@ def get_credentials(credentials_path: str = DEFAULT_CREDENTIALS_PATH,
 
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
-        token_json = json.loads(creds.to_json())
-        with open(token_path, "w") as token_file:
-            json.dump(token_json, token_file)
+            token_json = json.loads(creds.to_json())
+            with open(token_path, "w") as token_file:
+                json.dump(token_json, token_file)
 
     return creds
 def file_listing():
