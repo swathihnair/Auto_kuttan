@@ -21,7 +21,11 @@ from agno.agent import Agent
 from agno.models.groq import Groq
 from PyPDF2 import PdfReader
 from dotenv import load_dotenv
-load_dotenv()
+
+# Only load .env file if we're not on Render (local development)
+if not os.getenv("RENDER"):
+    load_dotenv()
+
 DEFAULT_CREDENTIALS_PATH = "mcp_server/mcp_server_helper/credentials.json"
 DEFAULT_TOKEN_PATH = "mcp_server/mcp_server_helper/token.json"
 

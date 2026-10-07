@@ -5,7 +5,11 @@ from agno.models.groq import Groq
 from agno.tools.mcp import MCPTools
 from dotenv import load_dotenv
 import os
-load_dotenv()
+
+# Only load .env file if we're not on Render (local development)
+if not os.getenv("RENDER"):
+    load_dotenv()
+
 server_params = StdioServerParameters(
     command="uv",
     args=["run","mcp_server/mcp_drive.py"],
