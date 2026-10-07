@@ -38,12 +38,24 @@ def get_credentials(credentials_path: str = DEFAULT_CREDENTIALS_PATH,
     print(f"Looking for token at: {token_path}")
     print(f"Looking for credentials at: {credentials_path}")
     
-    if os.path.exists(token_path):
+    # First, try to get token from environment variable (for production)
+    token_json_env = os.getenv("GOOGLE_TOKEN_JSON")
+    if token_json_env:
+        print("Using token from environment variable")
+        try:
+            token_data = json.loads(token_json_env)
+            creds = Credentials.from_authorized_user_info(token_data, SCOPES)
+            print("Credentials loaded from environment variable")
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse token from environment: {e}")
+    
+    # If not in environment, try local file
+    if not creds and os.path.exists(token_path):
         print(f"Token file found at {token_path}")
         with open(token_path, "r") as token_file:
             token_data = json.load(token_file)
             creds = Credentials.from_authorized_user_info(token_data, SCOPES)
-    else:
+    elif not creds:
         print(f"Token file NOT found at {token_path}")
     
     if not creds or not creds.valid:
