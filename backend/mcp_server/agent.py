@@ -14,10 +14,16 @@ server_params = StdioServerParameters(
 async def main(query: str):
     async with MCPTools(server_params=server_params,timeout_seconds=30.0) as mcp_tools:
             print(mcp_tools)
+            
+            # Get API key from environment
+            groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ_API")
+            if not groq_api_key:
+                raise ValueError("GROQ_API_KEY not set. Please set the GROQ_API_KEY environment variable.")
+            
             agent = Agent(
                 model=Groq(
                     id="openai/gpt-oss-120b",
-                    api_key=os.getenv("GROQ_API"),
+                    api_key=groq_api_key,
                 ),
                 tools=[mcp_tools],
                 markdown=True,
