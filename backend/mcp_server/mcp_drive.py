@@ -16,8 +16,12 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 import os
-DEFAULT_CREDENTIALS_PATH = "./mcp_server/mcp_server_helper/credentials.json"
-DEFAULT_TOKEN_PATH = "./mcp_server/mcp_server_helper/token.json"
+
+# Get the base directory (backend folder)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_CREDENTIALS_PATH = os.path.join(BASE_DIR, "mcp_server/mcp_server_helper/credentials.json")
+DEFAULT_TOKEN_PATH = os.path.join(BASE_DIR, "mcp_server/mcp_server_helper/token.json")
+DOWNLOAD_DIR = os.path.join(BASE_DIR, "download")
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.send",
@@ -31,13 +35,27 @@ mcp = FastMCP("Drive")
 def get_credentials(credentials_path: str = DEFAULT_CREDENTIALS_PATH,
                    token_path: str = DEFAULT_TOKEN_PATH) -> Credentials:
     creds = None
+    print(f"Looking for token at: {token_path}")
+    print(f"Looking for credentials at: {credentials_path}")
+    
     if os.path.exists(token_path):
+        print(f"Token file found at {token_path}")
         with open(token_path, "r") as token_file:
             token_data = json.load(token_file)
-            creds = Credentials.from_authorized_user_info(token_data)
+            creds = Credentials.from_authorized_user_info(token_data, SCOPES)
+    else:
+        print(f"Token file NOT found at {token_path}")
+    
     if not creds or not creds.valid:
+        print(f"Credentials invalid or missing. Valid: {creds.valid if creds else 'None'}")
         if creds and creds.expired and creds.refresh_token:
+            print("Refreshing expired token...")
             creds.refresh(Request())
+            # Save refreshed token
+            token_json = json.loads(creds.to_json())
+            with open(token_path, "w") as token_file:
+                json.dump(token_json, token_file)
+            print("Token refreshed and saved!")
         else:
             if not os.path.exists(credentials_path):
                 raise FileNotFoundError(
@@ -47,9 +65,11 @@ def get_credentials(credentials_path: str = DEFAULT_CREDENTIALS_PATH,
 
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
-        token_json = json.loads(creds.to_json())
-        with open(token_path, "w") as token_file:
-            json.dump(token_json, token_file)
+            token_json = json.loads(creds.to_json())
+            with open(token_path, "w") as token_file:
+                json.dump(token_json, token_file)
+    else:
+        print("Credentials are valid!")
 
     return creds
 
@@ -73,7 +93,9 @@ def get_file_id_by_name(file_name: str) -> str:
 def file_download(file_name: str) -> str:
     """Download file from Google Drive by file name."""
     try:
+        print(f"Attempting to download file: {file_name}")
         service = build("drive", "v3", credentials=get_credentials())
+        print("Service built successfully")
 
         # ✅ get correct file id
         file_id = get_file_id_by_name(file_name)
@@ -90,14 +112,18 @@ def file_download(file_name: str) -> str:
                 print(f"Download Progress: {int(status.progress() * 100)}%")
 
         fh.seek(0)
-        os.makedirs("./download", exist_ok=True)
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-        with open(f"./download/{file_name}", "wb") as f:
+        with open(os.path.join(DOWNLOAD_DIR, file_name), "wb") as f:
             shutil.copyfileobj(fh, f)
 
+        print(f"File saved to: {os.path.join(DOWNLOAD_DIR, file_name)}")
         return "File downloaded successfully ✅"
 
     except Exception as e:
+        import traceback
+        print(f"Full error traceback:")
+        traceback.print_exc()
         return f"Error downloading file: {e}"
 
 @mcp.tool()
@@ -110,7 +136,7 @@ def send_email_google(filename: str, receiver_email: str) -> str:
         receiver_email: Email address of the receiver
     """
 
-    file_path = f"./download/{filename}"
+    file_path = os.path.join(DOWNLOAD_DIR, filename)
 
     if not os.path.exists(file_path):
         return "Error: File not found."
