@@ -10,3 +10,9 @@ services:
         value: 3.12.0
       - key: GROQ_API
         sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GOOGLE_TOKEN_JSON
+        sync: false
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
+        sync: false
