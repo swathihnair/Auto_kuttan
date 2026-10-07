@@ -22,9 +22,8 @@ from agno.models.groq import Groq
 from PyPDF2 import PdfReader
 from dotenv import load_dotenv
 
-# Only load .env file if we're not on Render (local development)
-if not os.getenv("RENDER"):
-    load_dotenv()
+# Try to load .env file, but it won't override existing environment variables
+load_dotenv(override=False)
 
 DEFAULT_CREDENTIALS_PATH = "mcp_server/mcp_server_helper/credentials.json"
 DEFAULT_TOKEN_PATH = "mcp_server/mcp_server_helper/token.json"
@@ -52,14 +51,21 @@ def folder_selector_ai(
 ) -> FolderSelecter:
     pdf_text = extract_pdf_text(pdf_path)
 
-    # Get API key from environment
-    groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ_API")
-    print(f"DEBUG: GROQ_API_KEY from env: {'SET' if os.getenv('GROQ_API_KEY') else 'NOT SET'}")
-    print(f"DEBUG: GROQ_API from env: {'SET' if os.getenv('GROQ_API') else 'NOT SET'}")
-    print(f"DEBUG: Final API key: {'SET' if groq_api_key else 'NOT SET'}")
+    # Get API key from environment - extensive debugging
+    groq_api_key_var = os.getenv("GROQ_API_KEY")
+    groq_api_var = os.getenv("GROQ_API")
+    
+    print(f"DEBUG: Environment variables check:")
+    print(f"  GROQ_API_KEY: {groq_api_key_var[:10] if groq_api_key_var else 'NOT SET'}...")
+    print(f"  GROQ_API: {groq_api_var[:10] if groq_api_var else 'NOT SET'}...")
+    print(f"  All env keys: {[k for k in os.environ.keys() if 'GROQ' in k]}")
+    
+    groq_api_key = groq_api_key_var or groq_api_var
     
     if not groq_api_key:
-        raise ValueError("GROQ_API_KEY not set. Please set the GROQ_API_KEY environment variable.")
+        error_msg = f"GROQ_API_KEY not set. Checked GROQ_API_KEY and GROQ_API. Available env vars: {list(os.environ.keys())}"
+        print(f"ERROR: {error_msg}")
+        raise ValueError(error_msg)
 
     agent = Agent(
         model=Groq(

@@ -6,9 +6,8 @@ from agno.tools.mcp import MCPTools
 from dotenv import load_dotenv
 import os
 
-# Only load .env file if we're not on Render (local development)
-if not os.getenv("RENDER"):
-    load_dotenv()
+# Try to load .env file, but it won't override existing environment variables
+load_dotenv(override=False)
 
 server_params = StdioServerParameters(
     command="uv",
