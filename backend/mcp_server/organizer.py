@@ -50,6 +50,10 @@ def folder_selector_ai(
 
     # Get API key from environment
     groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ_API")
+    print(f"DEBUG: GROQ_API_KEY from env: {'SET' if os.getenv('GROQ_API_KEY') else 'NOT SET'}")
+    print(f"DEBUG: GROQ_API from env: {'SET' if os.getenv('GROQ_API') else 'NOT SET'}")
+    print(f"DEBUG: Final API key: {'SET' if groq_api_key else 'NOT SET'}")
+    
     if not groq_api_key:
         raise ValueError("GROQ_API_KEY not set. Please set the GROQ_API_KEY environment variable.")
 
